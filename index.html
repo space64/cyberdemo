@@ -301,7 +301,7 @@
 				"serverSide": true,
 				"deferRender": true,
 				"ajax":{
-					url :"product2.php", // json datasource
+					url :"productlist.php", // json datasource
 					type: "post",  // method  , by default get
 					error: function(){  // error handling
 						$("#producttbl").append('<tbody class="employee-grid-error"><tr><th colspan="5">No data found in the server</th></tr></tbody>');
@@ -345,7 +345,7 @@
 								success: function(data, status) {
 									//data nhận được từ server là JSON đã ở dạng object, truy cập các thuộc tính qua dấu chấm: data.name
 									var message = "";
-									var message = "Result from server:</br> "+data;
+									var message = "Result from server:</br> ID: "+data.pid+"</br>Name: "+data.name;
 									console.log(data);	//Ghi log ra màn hình console, nhấn F12 ở trình duyệt Chrome, tab Console để xem
 									new Noty({
 										text: message,

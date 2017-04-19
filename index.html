@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="./favicon.ico">
+	<title>VNP ERP - Demo by Hn</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./css/style.css">
+	<!--Sidebar menu -->
+	<link rel="stylesheet" href="./css/sidebar-menu.css">
+	<!--Noty -->
+	<link rel="stylesheet" href="./css/noty.css">
+	<!--DataTables.net -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
+	<!--Toggle Switch: checkbox On/Off-->
+	<link rel="stylesheet" type="text/css" href="./css/tinytools.toggleswitch.min.css">
+	<style>
+	/* Khung đăng nhập ở góc trên bên phải*/
+	#logindiv {
+		display: none;
+		position:fixed;
+		right: 14px;
+		top: 30px;
+		background-color:#ffc299;
+		border-radius: 7px;
+		width: 190px;
+		height: 160px;
+		padding: 10px;
+		border-style:solid;
+		border-side: 1px;
+		border-color: #ff944d;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	}
+	@media screen and (min-width: 768px) {
+		.custom-class {
+			width: 500px; /* either % (e.g. 60%) or px (400px) */
+		}
+	}
+	.pop {
+	}
+	
+	.subicon{
+		color: #ff471a;
+	}
+	</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+<!--
+	<header class="header">
+		<img id="logo" src="./image/logo.png" style="width:220px;padding-top:20px"/>
+	</header> .header-->
+
+	<div class="middle">
+
+		<div class="container">
+			<!-- Content-->
+			<main class="content animation" id="content">
+			
+				<!-- Upload hình ảnh-->
+				<div id="upload"> 
+					<img id="preview" src="./image/person-placeholder.jpg"/>
+					<input type="file" name="avatarfile" id="avatarfile" onchange="previewImage(this)" accept="image/*"/>
+				</div>
+				</br>
+				<div class="btn-group" role="group" aria-label="Basic example">
+				  <button type="button" id="showhide" class="btn btn-warning" data-toggle="tooltip" title="Auto hide menu"data-placement="right"><span class="glyphicon glyphicon-eye-open"></span></button>
+				  <button type="button" id="add" class="btn btn-success">Add</button>
+				  <button type="button" id="update" class="btn btn-info">Update</button>
+				  <button type="button" id="delete" class="btn btn-danger">Delete</button>
+				  <button type="button" id="showmodal" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Open Popup</button>
+				</div>
+				<button type="button" class="btn btn-success btn-sm" id="load" style="position:fixed; right:90px; top:0px;"><span class="glyphicon glyphicon-refresh"> Refresh
+				</button>
+				<!-- Popup Đăng nhập -->
+				<button type="button" class="btn btn-info btn-sm" id="hide" style="position:fixed; right:15px; top:0px;">
+				  <span class="glyphicon glyphicon-user"> Login
+				</button>	
+				<div id="logindiv" >
+					<form action="login.php" method="post" id="login-form">
+					  Username:<br>
+					  <input type="text" name="username" id="username" value="admin" >
+					  <br>
+					  Password:<br>
+					  <input type="password" name="password" id="password" value="1a2b3c" >
+					  <br>
+					  <span style="color:gray;">Valid account: admin | 12345</span>
+					  <br>
+					  <button type="submit" class="btn btn-primary btn-sm" style="margin-left:50px;margin-top:5px;">
+						  <span class="glyphicon glyphicon-chevron-right"></span> Login
+						</button>
+					</form> 
+				</div>
+				
+				<!-- Popup dùng Boostrap -->
+				<!-- Modal -->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog custom-class" role="document">
+					<div class="modal-content">
+					  <div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Login</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						  <span aria-hidden="true">&times;</span>
+						</button>
+					  </div>
+					  <div class="modal-body">
+						<form>
+						<div class="form-group row">
+						  <div class="col-sm-12">
+							<div class="input-group input-group-lg">
+							  <span class="input-group-addon" id="sizing-addon1"><span class="glyphicon glyphicon-user"></span></span>
+							  <input type="text" class="form-control" placeholder="Username">
+							</div>
+						  </div>
+						</div>
+						<div class="form-group row">
+						  <div class="col-sm-12">
+							<div class="input-group input-group-lg">
+							  <span class="input-group-addon" id="sizing-addon1"><span class="glyphicon glyphicon-asterisk"></span></span>
+							  <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+							</div>
+						  </div>
+						</div>
+						<div class="form-group row">
+						  <div class="offset-sm-5 col-sm-12">
+							<button type="submit" class="btn btn-primary">Sign in</button>
+						  </div>
+						</div>
+						</form> 
+						
+					  </div>
+					</div>
+				  </div>
+				</div>
+				<hr>
+				
+				
+				<!-- Bảng sản phẩm-->
+				<div id="tableholder">
+				<table id="producttbl" class="display" cellspacing="0" width="100%" style="background-color:white;">
+					<thead>
+					<tr>
+						<th>Image</th>
+						<th>Link</th>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Status</th>
+						<th>Price</th>
+					</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				</div>
+			</main><!-- .content -->
+		</div><!-- .container-->
+
+		<!-- Menu dọc bên trái-->
+		<aside class="left-sidebar animation" id="left-sidebar" >
+			<ul class="sidebar-menu" >
+			  <li class="sidebar-header"><img id="logo" src="./image/logo.png" style="width:200px;margin-left:-15px"/></li>
+			  <li>
+				<a href="#">
+				  <i class="fa fa-dashboard"></i> <span class="pop"> Dashboard</span> <i class="fa fa-angle-left pull-right pop"></i>
+				</a>
+				<ul class="sidebar-submenu">
+				  <li><a href="#"><i class="fa fa-circle-o subicon" data-toggle="tooltip" title="Dashboard V1"data-placement="right"></i> <span class="pop"> Dashboard v1</span></a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon" data-toggle="tooltip" title="Dashboard v2"data-placement="right"></i> <span class="pop"> Dashboard v2</span></a></li>
+				</ul>
+			  </li>
+			  <li>
+				<a href="#">
+				  <i class="fa fa-files-o"></i>
+				  <span class="pop">Documentation</span>
+				  <span class="label label-primary pull-right pop">4</span>
+				</a>
+				<ul class="sidebar-submenu" style="display: none;">
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> My document</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> New document</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Regulation</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Trash</a>
+				  </li>
+				</ul>
+			  </li>
+			  <li>
+				<a href="#">
+				  <i class="fa fa-th"></i> <span class="pop">Notification</span>
+				  <small class="label pull-right label-info pop">new</small>
+				</a>
+			  </li>
+			  <li>
+				<a href="#">
+				  <i class="fa fa-pie-chart"></i>
+				  <span class="pop">General Report</span>
+				  <i class="fa fa-angle-left pull-right pop"></i>
+				</a>
+				<ul class="sidebar-submenu">
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Sales</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Inventory</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Human Resource</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Financial</a></li>
+				</ul>
+			  </li>
+			  <li>
+				<a href="#">
+				  <i class="fa fa-laptop"></i>
+				  <span class="pop">Sales</span>
+				  <i class="fa fa-angle-left pull-right pop"></i>
+				</a>
+				<ul class="sidebar-submenu">
+				  <li><a href="#"><i class="fa fa-circle-o subicon" data-toggle="tooltip" title="Dashboard"data-placement="left"></i><span class="pop"> Dashboard</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon" data-toggle="tooltip" title="Sales Orders" data-placement="left"></i><span class="pop"> Sales Orders</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Products</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Sales Staffs</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Customers</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Reports</a></li>
+				</ul>
+			  </li>
+			  <li>
+				<a href="#">
+				  <i class="fa fa-edit"></i> <span class="pop"> Project</span>
+				  <i class="fa fa-angle-left pull-right pop"></i>
+				</a>
+				<ul class="sidebar-submenu">
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Dashboard</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Projects</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Reports</a></li>
+				</ul>
+			  </li>
+			  <li>
+				<a href="#">
+				  <i class="fa fa-table"></i> <span class="pop"> Inventory</span>
+				  <i class="fa fa-angle-left pull-right pop"></i>
+				</a>
+				<ul class="sidebar-submenu">
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Dashboard</a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Good Receipt </a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Internal Transfers </a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Delivery Orders </a></li>
+				  <li><a href="#"><i class="fa fa-circle-o subicon"></i><span class="pop"> Reports </a></li>
+				</ul>
+			  </li>
+			  <li>
+				<a href="#">
+				  <i class="fa fa-calendar"></i> <span class="pop"> Sales Forecast</span>
+				  <small class="label pull-right label-danger pop">3</small>
+				</a>
+			  </li>
+			  <li>
+				<a href="#">
+				  <i class="fa fa-envelope"></i> <span class="pop"> Mailbox</span>
+				  <small class="label pull-right label-warning pop">12</small>
+				</a>
+			  </li>
+			  <li><a href="#"><i class="fa fa-book"></i> <span class="pop"> Settings</span></a></li>
+			  <li class="sidebar-header">LABELS</li>
+			  <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span class="pop">Important</span></a></li>
+			  <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span class="pop">Warning</span></a></li>
+			  <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span class="pop">Information</span></a></li>
+			</ul>
+		</aside><!-- .left-sidebar -->
+
+	</div><!-- .middle-->
+
+</div><!-- .wrapper -->
+
+<footer class="footer">
+	<div class="element">
+	© 2017 Cyberstorm Team
+	</div>
+</footer> <!--.footer -->
+
+<!------------------------------------------------------------------------------------->
+<!-- Latest compiled JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<!-- Sidebar Menu: http://www.jqueryscript.net/menu/Responsive-Admin-Sidebar-Menu-Plugin-With-jQuery-sidebar-nav.html -->
+<script src="./js/sidebar-menu.js"></script>
+<!-- ToggleSwitch: http://tinytools.codesells.com/ToggleSwitch -->
+<script src="./js/tinytools.toggleswitch.min.js"></script>
+<!-- Noty: http://ned.im/noty/ -->
+<script src="./js/noty.js"></script>
+<!------------------------------------------------------------------------------------->
+
+<script>
+	var tblProduct;
+	var $auto = false;
+	
+    $.sidebarMenu($('.sidebar-menu'));
+	$(document).ready( function () {
+		//1. Datatables
+		tblProduct = $('#producttbl').DataTable({ 
+				"processing": true,
+				"serverSide": true,
+				"deferRender": true,
+				"ajax":{
+					url :"product2.php", // json datasource
+					type: "post",  // method  , by default get
+					error: function(){  // error handling
+						$("#producttbl").append('<tbody class="employee-grid-error"><tr><th colspan="5">No data found in the server</th></tr></tbody>');
+					},
+				},
+				"columnDefs": [ {
+						"targets": 1,
+						"render": function ( data, type, row, meta ) {
+							return '<a href="change.php?id='+row[2]+'"><img height="40" width="50" src="image/'+row[1]+'"></a>';
+						}
+					} , 
+					{ 	
+						"targets": 4,
+						"render": function ( data, type, row, meta ) {
+							return row[4]== '1' ? '<input type="checkbox" class="tws" checked pid="'+row[2]+'"/>': '<input type="checkbox" class="tws" pid="'+row[2]+'"/>';
+						}
+					},
+					{ 	//Ẩn cột đường dẫn tới hình
+						"targets": 0,
+						"visible": false
+					}
+				],
+				"footerCallback": function ( row, data, start, end, display ) {
+					setTimeout(function(){ 
+						$(".tws").toggleSwitch({
+							width:"60px",
+							height:"25px",
+							onLabel:"|",
+							offLabel:"O"
+						});
+						$(".tws").change(function(){
+							//Lấy mã sản phẩm lưu trong checkbox ở thuộc tính pid tự tạo
+							var productid = $(this).attr('pid');			
+							
+							//GỌI AJAX ĐẦY ĐỦ có thông báo lỗi
+							$.ajax({
+								type: 'GET',
+								url: 'product.php',
+								data: "pid=" + productid, //Nhiều thông tin hơn: "pid=abc & pname=xyz & pdescription=ght"
+								//Trường hợp thành công
+								success: function(data, status) {
+									//data nhận được từ server là JSON đã ở dạng object, truy cập các thuộc tính qua dấu chấm: data.name
+									var message = "";
+									var message = "Result from server:</br> "+data;
+									console.log(data);	//Ghi log ra màn hình console, nhấn F12 ở trình duyệt Chrome, tab Console để xem
+									new Noty({
+										text: message,
+										theme: 'metroui',
+										timeout: 1500,
+										layout: 'bottomRight',
+										type: 'information',
+									}).show();
+								},
+								//Trường hợp bị lỗi
+								error: function(xhr, status, error) {
+									alert("Error: "+ xhr.responseText);
+									//Nhấn F12 trong Chrome, chọn tab Console để xem lỗi
+								}
+							});
+			
+						}); // .end phần 5 Change on/off
+					}, 1);
+				},
+		});
+		
+		//2. Reload data
+		$('#load').click(function(){
+			tblProduct.ajax.reload();
+		});
+		
+		//3. Upload Preview
+		$('#preview').click(function(){
+				$('#avatarfile').click();
+		});
+		
+		//4. Khi nhấn nút sẽ ẩn hiện phần đầu trang
+		$("#hide").click(function(){
+			$("#logindiv").toggle('fast');
+		});
+		
+		//5. Show hide
+		$('#showhide').click(function(){
+			$auto = !$auto; 	//Bật tắt chế độ tự động
+			showhidemenu();
+		});
+		//6. Ẩn hiện menu trái tự động
+		$("#left-sidebar").hover(function(){
+			if($auto)
+				showhidemenu();
+		}, function(){
+			if($auto)
+				showhidemenu();
+		});
+		//7. Nhấn submit form login
+		$("#login-form").on( "submit", function( event ) {
+			event.preventDefault(); //Không thực hiện submit như mặc định (sẽ khiến load trang)
+			
+			//Gửi thông tin trong form đến login.php
+			//$(this).serialize() nhằm gửi tất cả thông tin có trong form cùng lúc theo định dạng chuẩn
+			$.post("login.php", $( this ).serialize() , function(data) {
+					//Xử lý kết quả server trả lại client sau khi xử lý
+					var message;
+					var notytype;
+
+					if (data == true){	//Nếu server trả về true
+						message = "Hi "+$("#username").val()+", you have successfully logged in.";
+						notytype = 'success';
+						$("#logindiv").toggle('slow');	//Ẩn popup login
+					}else{				//Nếu server trả về false
+						message = "Your username or password is incorrect";
+						notytype = 'warning';
+					}
+					//Hiển thị thông báo
+					var n = new Noty({
+						text: message,
+						theme: 'metroui',
+						timeout: 2000,
+						layout: 'center',
+						type: notytype,
+						closeWith: ['button'],
+						buttons: [
+							Noty.button('OK', 'btn btn-success', function () {
+								n.close();	//Đóng thông báo khi nhấn OK
+							})
+						  ]
+					}).show();
+					//$("#username").val("");
+					//$("#password").val("");
+				});
+		}); // .end phần 6 Login
+
+	} ); // .end document ready
+	
+	//Xem hình ảnh ngay ở client khi chọn để upload (xem trước khi upload)
+	function previewImage(input) {
+		var preview = document.getElementById('preview');
+		if (input.files && input.files[0]) {
+		  var reader = new FileReader();
+		  reader.onload = function (e) {
+			preview.setAttribute('src', e.target.result);
+		  }
+		  reader.readAsDataURL(input.files[0]);
+		} else {
+		  preview.setAttribute('src', './image/person-placeholder.jpg');
+		}
+	}
+	
+	//Hàm ẩn hiện menu cạnh trái
+	$showlarge = true;
+	function showhidemenu(){
+		$(".pop").toggle('fast');
+		if($showlarge){
+			$("#left-sidebar").removeClass("left-sidebar");
+			$("#left-sidebar").addClass("left-sidebar-min");
+			$("#content").removeClass("content");
+			$("#content").addClass("content-min");
+		}else{
+			$("#left-sidebar").removeClass("left-sidebar-min");
+			$("#left-sidebar").addClass("left-sidebar");
+			$("#content").removeClass("content-min");
+			$("#content").addClass("content");
+		}
+		$showlarge = !$showlarge;
+	}
+  </script>
+</body>
+</html>

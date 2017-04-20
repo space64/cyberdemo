@@ -19,33 +19,8 @@
 	<!--Toggle Switch: checkbox On/Off-->
 	<link rel="stylesheet" type="text/css" href="./css/tinytools.toggleswitch.min.css">
 	<style>
-	/* Khung đăng nhập ở góc trên bên phải*/
-	#logindiv {
-		display: none;
-		position:fixed;
-		right: 14px;
-		top: 30px;
-		background-color:#ffc299;
-		border-radius: 7px;
-		width: 190px;
-		height: 160px;
-		padding: 10px;
-		border-style:solid;
-		border-side: 1px;
-		border-color: #ff944d;
-		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	}
-	@media screen and (min-width: 768px) {
-		.custom-class {
-			width: 500px; /* either % (e.g. 60%) or px (400px) */
-		}
-	}
-	.pop {
-	}
+	/* empty */
 	
-	.subicon{
-		color: #ff471a;
-	}
 	</style>
 </head>
 
@@ -101,7 +76,7 @@
 				<!-- Popup dùng Boostrap -->
 				<!-- Modal -->
 				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				  <div class="modal-dialog custom-class" role="document">
+				  <div class="modal-dialog custom-modal-class" role="document">
 					<div class="modal-content">
 					  <div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">Login</h5>
@@ -167,7 +142,7 @@
 			  <li class="sidebar-header"><img id="logo" src="./image/logo.png" style="width:200px;margin-left:-15px"/></li>
 			  <li>
 				<a href="#">
-				  <i class="fa fa-dashboard"></i> <span class="pop"> Dashboard</span> <i class="fa fa-angle-left pull-right pop"></i>
+				  <i class="fa fa-dashboard"></i> <span class="pop animation"> Dashboard</span> <i class="fa fa-angle-left pull-right pop"></i>
 				</a>
 				<ul class="sidebar-submenu">
 				  <li><a href="#"><i class="fa fa-circle-o subicon" data-toggle="tooltip" title="Dashboard V1"data-placement="right"></i> <span class="pop"> Dashboard v1</span></a></li>
@@ -300,6 +275,9 @@
 				"processing": true,
 				"serverSide": true,
 				"deferRender": true,
+				"language": {
+					"url": "https://cdn.datatables.net/plug-ins/1.10.15/i18n/Vietnamese.json"
+				},
 				"ajax":{
 					url :"productlist.php", // json datasource
 					type: "post",  // method  , by default get
@@ -452,17 +430,21 @@
 	//Hàm ẩn hiện menu cạnh trái
 	$showlarge = true;
 	function showhidemenu(){
-		$(".pop").toggle('fast');
 		if($showlarge){
 			$("#left-sidebar").removeClass("left-sidebar");
 			$("#left-sidebar").addClass("left-sidebar-min");
 			$("#content").removeClass("content");
 			$("#content").addClass("content-min");
+			$(".pop").toggle('fast');
+			
 		}else{
 			$("#left-sidebar").removeClass("left-sidebar-min");
 			$("#left-sidebar").addClass("left-sidebar");
 			$("#content").removeClass("content-min");
 			$("#content").addClass("content");
+			setTimeout(function(){
+				$(".pop").toggle('fast');
+			},150);
 		}
 		$showlarge = !$showlarge;
 	}

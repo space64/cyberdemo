@@ -19,8 +19,33 @@
 	<!--Toggle Switch: checkbox On/Off-->
 	<link rel="stylesheet" type="text/css" href="./css/tinytools.toggleswitch.min.css">
 	<style>
-	/* empty */
+	/* Khung đăng nhập ở góc trên bên phải*/
+	#logindiv {
+		display: none;
+		position:fixed;
+		right: 14px;
+		top: 30px;
+		background-color:#ffc299;
+		border-radius: 7px;
+		width: 190px;
+		height: 160px;
+		padding: 10px;
+		border-style:solid;
+		border-side: 1px;
+		border-color: #ff944d;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	}
+	@media screen and (min-width: 768px) {
+		.custom-class {
+			width: 500px; /* either % (e.g. 60%) or px (400px) */
+		}
+	}
+	.pop {
+	}
 	
+	.subicon{
+		color: #ff471a;
+	}
 	</style>
 </head>
 
@@ -76,7 +101,7 @@
 				<!-- Popup dùng Boostrap -->
 				<!-- Modal -->
 				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				  <div class="modal-dialog custom-modal-class" role="document">
+				  <div class="modal-dialog custom-class" role="document">
 					<div class="modal-content">
 					  <div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">Login</h5>
@@ -142,7 +167,7 @@
 			  <li class="sidebar-header"><img id="logo" src="./image/logo.png" style="width:200px;margin-left:-15px"/></li>
 			  <li>
 				<a href="#">
-				  <i class="fa fa-dashboard"></i> <span class="pop animation"> Dashboard</span> <i class="fa fa-angle-left pull-right pop"></i>
+				  <i class="fa fa-dashboard"></i> <span class="pop"> Dashboard</span> <i class="fa fa-angle-left pull-right pop"></i>
 				</a>
 				<ul class="sidebar-submenu">
 				  <li><a href="#"><i class="fa fa-circle-o subicon" data-toggle="tooltip" title="Dashboard V1"data-placement="right"></i> <span class="pop"> Dashboard v1</span></a></li>
@@ -275,11 +300,8 @@
 				"processing": true,
 				"serverSide": true,
 				"deferRender": true,
-				"language": {
-					"url": "https://cdn.datatables.net/plug-ins/1.10.15/i18n/Vietnamese.json"
-				},
 				"ajax":{
-					url :"productlist.php", // json datasource
+					url :"product2.php", // json datasource
 					type: "post",  // method  , by default get
 					error: function(){  // error handling
 						$("#producttbl").append('<tbody class="employee-grid-error"><tr><th colspan="5">No data found in the server</th></tr></tbody>');
@@ -294,7 +316,7 @@
 					{ 	
 						"targets": 4,
 						"render": function ( data, type, row, meta ) {
-							return row[4]== '1' ? '<input type="checkbox" class="tws" checked pid="'+row[2]+'"/>': '<input type="checkbox" class="tws" pid="'+row[2]+'"/>';
+							return row[4]== '1' ? '<input type="checkbox" class="tws" name="checkboxlist" checked pid="'+row[2]+'"/>': '<input type="checkbox" class="tws" name="checkboxlist" pid="'+row[2]+'"/>';
 						}
 					},
 					{ 	//Ẩn cột đường dẫn tới hình
@@ -323,7 +345,7 @@
 								success: function(data, status) {
 									//data nhận được từ server là JSON đã ở dạng object, truy cập các thuộc tính qua dấu chấm: data.name
 									var message = "";
-									var message = "Result from server:</br> ID: "+data.pid+"</br>Name: "+data.name;
+									var message = "Result from server:</br> "+data;
 									console.log(data);	//Ghi log ra màn hình console, nhấn F12 ở trình duyệt Chrome, tab Console để xem
 									new Noty({
 										text: message,
@@ -365,7 +387,41 @@
 			$auto = !$auto; 	//Bật tắt chế độ tự động
 			showhidemenu();
 		});
-		//6. Ẩn hiện menu trái tự động
+		
+		//6. Delete selected item
+		$('#delete').click(function(){
+			//Chọng lấy id từ nhiều checkbox được chọn, kết quả là một array
+			var checkValues = $('input[name=checkboxlist]:checked').map(function() {
+				return $(this).attr('pid');
+			}).get();
+			 
+			$.ajax({
+				type: 'POST',
+				url: 'productdelete.php',
+				data: {productlist: checkValues}, //truyền dạng mảng
+				//Trường hợp thành công
+				success: function(data, status) {
+					//data nhận được từ server là JSON đã ở dạng object, truy cập các thuộc tính qua dấu chấm: data.name
+					var message = "";
+					var message = data;
+					console.log(data);	//Ghi log ra màn hình console, nhấn F12 ở trình duyệt Chrome, tab Console để xem
+					new Noty({
+						text: message,
+						theme: 'metroui',
+						timeout: 2500,
+						layout: 'bottomRight',
+						type: 'information',
+					}).show();
+				},
+				//Trường hợp bị lỗi
+				error: function(xhr, status, error) {
+					alert("Error: "+ xhr.responseText);
+					//Nhấn F12 trong Chrome, chọn tab Console để xem lỗi
+				}
+			});
+		});
+		
+		//7. Ẩn hiện menu trái tự động
 		$("#left-sidebar").hover(function(){
 			if($auto)
 				showhidemenu();
@@ -373,7 +429,7 @@
 			if($auto)
 				showhidemenu();
 		});
-		//7. Nhấn submit form login
+		//8. Nhấn submit form login
 		$("#login-form").on( "submit", function( event ) {
 			event.preventDefault(); //Không thực hiện submit như mặc định (sẽ khiến load trang)
 			
@@ -409,7 +465,7 @@
 					//$("#username").val("");
 					//$("#password").val("");
 				});
-		}); // .end phần 6 Login
+		}); // .end phần 8 Login
 
 	} ); // .end document ready
 	
@@ -430,21 +486,17 @@
 	//Hàm ẩn hiện menu cạnh trái
 	$showlarge = true;
 	function showhidemenu(){
+		$(".pop").toggle('fast');
 		if($showlarge){
 			$("#left-sidebar").removeClass("left-sidebar");
 			$("#left-sidebar").addClass("left-sidebar-min");
 			$("#content").removeClass("content");
 			$("#content").addClass("content-min");
-			$(".pop").toggle('fast');
-			
 		}else{
 			$("#left-sidebar").removeClass("left-sidebar-min");
 			$("#left-sidebar").addClass("left-sidebar");
 			$("#content").removeClass("content-min");
 			$("#content").addClass("content");
-			setTimeout(function(){
-				$(".pop").toggle('fast');
-			},150);
 		}
 		$showlarge = !$showlarge;
 	}

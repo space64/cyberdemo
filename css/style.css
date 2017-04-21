@@ -98,12 +98,6 @@ body {
 	overflow: hidden;
 }
 
-.pop {
-}
-
-.subicon{
-	color: #ff471a;
-}
 /* Footer
 -----------------------------------------------------------------------------*/
 .footer {
@@ -153,26 +147,3 @@ body {
 }
 /* Upload image
 -----------------------------------------------------------------------------*/
-#logindiv {
-		display: none;
-		position:fixed;
-		right: 14px;
-		top: 30px;
-		background-color:#ffc299;
-		border-radius: 7px;
-		width: 190px;
-		height: 160px;
-		padding: 10px;
-		border-style:solid;
-		border-side: 1px;
-		border-color: #ff944d;
-		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	}
-
-/* Popup
------------------------------------------------------------------------------*/
-@media screen and (min-width: 768px) {
-	.custom-modal-class {
-		width: 500px; /* either % (e.g. 60%) or px (400px) */
-	}
-}
